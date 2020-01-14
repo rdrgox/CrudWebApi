@@ -22,11 +22,25 @@ namespace CrudWebApi.Controllers
             _context = contexto;
         }
 
-        //Peticion get: api/contactos
+        //Peticion get todos los contactos: api/contactos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contacto>>> GetContactoItems()
         {
             return await _context.ContactoItems.ToListAsync();
+        }
+
+        //Peticion get solo un contacto
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Contacto>> GetContactoItems(int id)
+        {
+            var contactoItems = await _context.ContactoItems.FindAsync(id);
+
+            if(contactoItems ==  null)
+            {
+                return NotFound();
+            }
+
+            return contactoItems;
         }
     }
 }
