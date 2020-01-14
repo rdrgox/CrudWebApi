@@ -29,7 +29,7 @@ namespace CrudWebApi.Controllers
             return await _context.ContactoItems.ToListAsync();
         }
 
-        //Peticion get solo un contacto
+        //Peticion get solo un contacto:: api/contactos/3
         [HttpGet("{id}")]
         public async Task<ActionResult<Contacto>> GetContactoItems(int id)
         {
@@ -42,5 +42,49 @@ namespace CrudWebApi.Controllers
 
             return contactoItems;
         }
-    }
+
+        //Peticion post: api/contactos
+        [HttpPost]
+        public async Task<ActionResult<Contacto>> PostContactoItem(Contacto item)
+        {
+            _context.ContactoItems.Add(item);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetContactoItems), new { id = item.Id }, item);
+        }
+
+        //Peticion put: api/contactos/2
+        [HttpPut("{id}")]
+        public async Task<ActionResult> PutContactoItem(int id,Contacto item)
+        {
+            if (id != item.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(item).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        //Peticion delete: api/contactos/3
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteContactoItem(int id)
+        {
+            var contactoItem = await _context.ContactoItems.FindAsync(id);
+
+            if(contactoItem == null)
+            {
+                return NotFound();
+            }
+
+            _context.ContactoItems.Remove(contactoItem);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+    }//Fin
 }
